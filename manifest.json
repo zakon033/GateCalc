@@ -1,5 +1,5 @@
 {
-  "name": "Uklon — Перевірка розрахунків",
+  "name": "Розрахунок споживання електроенергії приводу відкатних воріт",
   "short_name": "GateCalc",
   "start_url": "./index.html",
   "display": "standalone",
