@@ -428,17 +428,43 @@ document.getElementById("calcBtn").onclick = function(){
   const t_vidkryttya = parseFloat(document.getElementById("t_vidkryttya").value) || 0;
   const t_zakryttya = parseFloat(document.getElementById("t_zakryttya").value) || 0;
   const kvo_zykliv = parseFloat(document.getElementById("kvo_zykliv").value) || 0;
-  
   const period = parseFloat(document.getElementById("period").value) || 0;
   const tarif = parseFloat(document.getElementById("tarif").value) || 0;
-  
   const potugnist_li4ilnyka = parseFloat(document.getElementById("potugnist_li4ilnyka").value) || 0;
   
   if(isNaN(tarif) || isNaN(potugnist_o4ikuvannya) || isNaN(potugnist_dvyguna) || isNaN(t_vidkryttya) || isNaN(t_zakryttya) || isNaN(kvo_zykliv) || isNaN(period)){
     alert("Пожалуйста, введите корректные числовые данные во все основные поля для расчета.");
     return;
   }
+  
+  const spogyvannya_o4ikuvannya = (potugnist_o4ikuvannya / 1000) * (period * 30 * 24); 
+
+  const spogyvannya_dvyguna = (potugnist_dvyguna / 1000) * (((t_vidkryttya + t_zakryttya) * kvo_zykliv * 30 * period) / 3600); 
+
+  const spogyvannya_li4ilnyka = (potugnist_li4ilnyka / 1000) * (period * 30 * 24);
+
+  const spogyvannya = spogyvannya_o4ikuvannya + spogyvannya_dvyguna + spogyvannya_li4ilnyka;
+
+  const suma = spogyvannya * tarif;
+
+  document.getElementById("suma").textContent = suma.toFixed(2) + " ₴";
+  
+  const spogyvannyaEl = document.getElementById("spogyvannya");
+  spogyvannyaEl.textContent = spogyvannya.toFixed(3) + " кВт⋅год";
+  spogyvannyaEl.className = "val"; 
+  
+  const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
+  
+• Споживання в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
+• Споживання двигуна (${potugnist_dvyguna} Вт, під час руху): ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год
+${potugnist_li4ilnyka > 0 ? `• Споживання лічильника (${potugnist_li4ilnyka} Вт): ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год` : ''}
+  
+Загальне споживання: ${spogyvannya.toFixed(3)} кВт⋅год
+Орієнтовна вартість (за тарифом ${tarif.toFixed(2)} грн/кВт⋅год): ${suma.toFixed(2)} грн`;
+  
+  document.getElementById('stdMsg').value = resultMessage;
 };
+
 
 
 document.getElementById('extraToggle').addEventListener('change', function () {
