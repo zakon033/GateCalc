@@ -314,6 +314,16 @@
   <h1>Розрахунок опосередкованного споживання системи відкатних воріт</h1>
 
   <div class="card">
+    <label class="toggle-row">
+      <span>Темна тема</span>
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+  </div>
+
+  <div class="card">
     <label>Споживання в режимі очікування*, Вт</label>
     <input id="actual" type="number" inputmode="decimal" placeholder="наприклад 155">
     <label>
@@ -322,9 +332,9 @@
   <a href="https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/">
     ROTEO RTO-500M https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/
   </a>
-
-
     </label>
+    <label></label>
+
 
     <label>Пробіг, км</label>
     <input id="distance" type="number" inputmode="decimal" step="0.01" placeholder="наприклад 3.0">
@@ -356,16 +366,6 @@
       </button>
       <button class="btn" id="calcBtn">Розрахувати</button>
     </div>
-  </div>
-
-  <div class="card">
-    <label class="toggle-row">
-      <span>Темна тема</span>
-      <label class="switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider"></span>
-      </label>
-    </label>
   </div>
 
   <div class="results">
