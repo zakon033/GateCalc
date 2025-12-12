@@ -515,30 +515,79 @@ document.getElementById("calcBtn").onclick = function(){
   
   // ------------------------------------------------------------------------
 
+  // ... (расчеты суммы)
+
+  const suma = spogyvannya * tarif;
+
+  // --- БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (Используем colorize) ---
+  // ... (colorize вызовы) ...
+  
+  const sumaEl = document.getElementById("suma");
+  const spogyvannyaEl = document.getElementById("spogyvannya");
+  
+  // Вызываем colorize для суммы (зеленый) и потребления (красный)
+  colorize(sumaEl, suma); 
+  colorize(spogyvannyaEl, spogyvannya); 
+  
+  // ------------------------------------------------------------------------
+
+  // --- НОВАЯ ЛОГИКА ФОРМИРОВАНИЯ СООБЩЕНИЯ С ПРАВИЛЬНОЙ НУМЕРАЦИЕЙ ---
+  
+  let currentStep = 1;
+  const details = [];
+
+  // 1. Споживання очікування
+  details.push(
+    `${currentStep++}. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
+   Формула: (Потужність / 1000) * (Період * 30 * 24)
+   Розрахунок: (${potugnist_o4ikuvannya} / 1000) * (${period} * 30 * 24) = ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год`
+  );
+
+  // 2. Споживання двигуна
+  details.push(
+    `${currentStep++}. Споживання двигуна (${potugnist_dvyguna} Вт, під час руху):
+   Формула: (Потужність / 1000) * ((Т_откр + Т_закр) * Цикли * 30 * Період / 3600)
+   Розрахунок: (${potugnist_dvyguna} / 1000) * ((${t_vidkryttya} + ${t_zakryttya}) * ${kvo_zykliv} * 30 * ${period} / 3600) = ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год`
+  );
+
+  // 3. Споживання лічильника (ДОПОЛНИТЕЛЬНЫЙ ПУНКТ)
+  if (potugnist_li4ilnyka > 0) {
+    details.push(
+      `${currentStep++}. Споживання лічильника (${potugnist_li4ilnyka} Вт):
+   Формула: (Потужність / 1000) * (Період * 30 * 24)
+   Розрахунок: (${potugnist_li4ilnyka} / 1000) * (${period} * 30 * 24) = ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год`
+    );
+  }
+
+  // Последний элемент, добавленный в details, будет текущим текущим шагом.
+  const stepTotal = currentStep++;
+  const stepCost = currentStep++;
+
+  // 4/5. Загальне споживання
+  details.push(
+    `${stepTotal}. Загальне споживання:
+   Формула: ${potugnist_li4ilnyka > 0 ? 'Очікування + Двигун + Лічильник' : 'Очікування + Двигун'}
+   Розрахунок: ${spogyvannya_o4ikuvannya.toFixed(3)} + ${spogyvannya_dvyguna.toFixed(3)} ${potugnist_li4ilnyka > 0 ? `+ ${spogyvannya_li4ilnyka.toFixed(3)}` : ''} = ${spogyvannya.toFixed(3)} кВт⋅год`
+  );
+
+  // 5/6. Орієнтовна вартість
+  details.push(
+    `${stepCost}. Орієнтовна вартість:
+   Формула: Загальне споживання * Тариф
+   Розрахунок: ${spogyvannya.toFixed(3)} * ${tarif.toFixed(2)} = ${suma.toFixed(2)} грн`
+  );
+  
+  // Собираем все части, используя двойной перевод строки для абзацев
   const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
   
-1. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
-   Формула: (Потужність / 1000) * (Період * 30 * 24)
-   Розрахунок: (${potugnist_o4ikuvannya} / 1000) * (${period} * 30 * 24) = ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
-
-2. Споживання двигуна (${potugnist_dvyguna} Вт, під час руху):
-   Формула: (Потужність / 1000) * ((Т_откр + Т_закр) * Цикли * 30 * Період / 3600)
-   Розрахунок: (${potugnist_dvyguna} / 1000) * ((${t_vidkryttya} + ${t_zakryttya}) * ${kvo_zykliv} * 30 * ${period} / 3600) = ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год
-   
-${potugnist_li4ilnyka > 0 ? `3. Споживання лічильника (${potugnist_li4ilnyka} Вт):
-   Формула: (Потужність / 1000) * (Період * 30 * 24)
-   Розрахунок: (${potugnist_li4ilnyka} / 1000) * (${period} * 30 * 24) = ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год` : ''}
-   
-4. Загальне споживання:
-   Формула: Очікування + Двигун + Лічильник
-   Розрахунок: ${spogyvannya_o4ikuvannya.toFixed(3)} + ${spogyvannya_dvyguna.toFixed(3)} + ${potugnist_li4ilnyka > 0 ? spogyvannya_li4ilnyka.toFixed(3) : 0} = ${spogyvannya.toFixed(3)} кВт⋅год
-
-5. Орієнтовна вартість:
-   Формула: Загальне споживання * Тариф
-   Розрахунок: ${spogyvannya.toFixed(3)} * ${tarif.toFixed(2)} = ${suma.toFixed(2)} грн
+${details.join("\n\n")}
    
 Загальна сума: ${suma.toFixed(2)} ₴
   `;
+  
+  document.getElementById('stdMsg').value = resultMessage;
+};
+
   
   document.getElementById('stdMsg').value = resultMessage;
 };
