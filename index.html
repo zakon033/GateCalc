@@ -413,7 +413,7 @@
       <h3>Розрахунок</h3>
       <div class="line"><span>Розрахункова сума</span><span class="val" id="suma">—</span></div>
       <div class="line"><span>Розрахункове споживання</span><span class="diff zero" id="spogyvannya">—</span></div>
-      <textarea id="stdMsg" placeholder="Повідомлення для оператора зʼявиться тут"></textarea>
+      <textarea id="stdMsg" placeholder="Деталізація розрахунків зʼявиться тут"></textarea>
       <button class="small-btn" id="copyStd">Копіювати</button>
     </div>
 
@@ -455,7 +455,7 @@ document.getElementById("calcBtn").onclick = function(){
   
   const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
   
-• Споживання в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
+• Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
 • Споживання двигуна (${potugnist_dvyguna} Вт, під час руху): ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год
 ${potugnist_li4ilnyka > 0 ? `• Споживання лічильника (${potugnist_li4ilnyka} Вт): ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год` : ''}
   
