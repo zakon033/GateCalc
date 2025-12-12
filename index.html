@@ -345,7 +345,7 @@
 
   <div class="card">
     <label>Потужність пристрою в режимі очікування*, Вт</label>
-    <input id="potugnist_o4ikuvannya" type="number" inputmode="decimal" value="3">
+    <input id="potugnist_o4ikuvannya" type="number" inputmode="decimal" value="4">
     <label>
   *Характеристики нашого пристрою в режимі очикування не знайдено,
   але є характеристики аналога по потужності 
@@ -517,7 +517,7 @@ document.getElementById("calcBtn").onclick = function(){
 
   // 1. Споживання очікування
   details.push(
-    `${currentStep++}. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
+    `${currentStep++}. Споживання пристрою в режимі очікування (${potugnist_o4ikuvannya} Вт, 24/7): 
    Формула: (Потужність / 1000) * (Період * 30 * 24)
    Розрахунок: (${potugnist_o4ikuvannya} / 1000) * (${period} * 30 * 24) = ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год`
   );
