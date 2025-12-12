@@ -573,15 +573,13 @@ document.getElementById("calcBtn").onclick = function(){
 
 document.getElementById('extraToggle').addEventListener('change', function () {
   const extra = document.getElementById('extraFields');
-  const paidInput = document.getElementById('paidMinutes');
-  const midInput = document.getElementById('midPoints');
+  const li4Input = document.getElementById('potugnist_li4ilnyka');
 
   if (this.checked) {
     extra.classList.add('open');
   } else {
     extra.classList.remove('open');
-    paidInput.value = '';
-    midInput.value = '';
+    li4Input.value = '';
   }
 });
 
