@@ -421,17 +421,8 @@
 </div>
 
 <script>
-const STD = {minKm:1.9, base:105, perKm:17.6, name:"Стандарт", extraMinute:3, extraPoint:10};
-const CFM = {minKm:2.1, base:115, perKm:19.8, name:"Комфорт", extraMinute:3, extraPoint:10};
-const BIZ = {minKm:1.6, base:140, perKm:23.5, name:"Бізнес", extraMinute:4, extraPoint:10};
 
-function calcFare(km, t){
-  return km <= t.minKm ? t.base : t.base + (km - t.minKm) * t.perKm;
-}
 
-function fmt(x){
-  return isNaN(x) ? "—" : x.toFixed(2) + " ₴";
-}
 
 function colorize(el, v){
   el.className = "diff";
@@ -458,55 +449,490 @@ function colorize(el, v){
   }
 }
 
-function getGreeting() {
-  const h = new Date().getHours();
 
-  if (h >= 5 && h < 12) return "Доброго ранку!🌤️";
-  if (h >= 12 && h < 17) return "Доброго дня!🌤️";
-  if (h >= 17 && h < 23) return "Доброго вечора!🌙✨";
-  return "Доброї ночі!✨🌙";
+
+
+
+  
+
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Розрахунок опосередкованного споживання системи відкатних воріт</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GateCalc">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png">
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+  /* --- ПЕРЕМЕННЫЕ ПО УМОЛЧАНИЮ (СВЕТЛАЯ ТЕМА) --- */
+  :root{
+    /* Основные цвета */
+    --bg:#f2f4f7;
+    --card:#ffffff;
+    --accent:#0066ff;
+    
+    /* Тексты */
+    --main-text:#000000;
+    --muted-text:#6b6b6b; 
+    
+    /* Границы и разделители */
+    --border-color:#d8dce3;
+    --panel-border:#e7e9ee;
+    --line-divider:#eee;
+    
+    /* Цвета состояний */
+    --green:#c8f5c2;
+    --red:#ffd4d4;
+    --good:#0c7a27;
+    --bad:#a80000;
+    
+    /* Элементы .zero */
+    --zero-bg:#f4f4f4;
+    --zero-border:#ccc;
+    --zero-text:#555;
+    --small-btn-bg:#eee;
+  }
+
+  /* --- ПЕРЕМЕННЫЕ ДЛЯ ТЕМНОЙ ТЕМЫ --- */
+  .dark-theme{
+    /* Основные цвета */
+    --bg:#121212;
+    --card:#1f1f1f;
+    --accent:#5599ff;
+    
+    /* Тексты */
+    --main-text:#f0f0f0;
+    --muted-text:#ffffff; 
+    
+    /* Границы и разделители */
+    --border-color:#333;
+    --panel-border:#2e2e2e;
+    --line-divider:#333;
+    
+    /* Цвета состояний */
+    --green:#1a3a1f; 
+    --red:#472c2c; 
+    --good:#5fb371; 
+    --bad:#ff7575; 
+    
+    /* Элементы .zero */
+    --zero-bg:#2d2d2d;
+    --zero-border:#444;
+    --zero-text:#a0a0a0;
+    --small-btn-bg:#333;
+  }
+  
+  /* --- БАЗОВЫЕ СТИЛИ (Одинаковые для обеих тем) --- */
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+    background:var(--bg);
+    margin:0;
+    padding:0;
+    color: var(--main-text); 
+  }
+  
+  a {
+    /* 1. Цвет текста ссылки берётся из вашей переменной --accent */
+    color: var(--accent);
+    
+    /* 2. Задает подчёркивание */
+    text-decoration: underline; 
 }
 
-function genMsg(t, km, coef, actual, paidMinutes, midPoints){
-  const baseFare = calcFare(km, t);
-  let total = baseFare * coef;
-
-  let lines = [`• Базовий тариф: (${t.base} + (${km.toFixed(2)} - ${t.minKm}) × ${t.perKm}) × ${coef.toFixed(2)} = ${(baseFare*coef).toFixed(2)} грн`];
-
-  if(paidMinutes > 0){
-    let addPaid = paidMinutes * t.extraMinute;
-    lines.push(`• Платні хвилини (${paidMinutes} × ${t.extraMinute} грн) = ${addPaid.toFixed(2)} грн`);
-    total += addPaid;
-  }
-  if(midPoints > 0){
-    let addPoints = midPoints * t.extraPoint;
-    lines.push(`• Проміжні точки (${midPoints} × ${t.extraPoint} грн) = ${addPoints.toFixed(2)} грн`);
-    total += addPoints;
+  
+  /* Применяем основные стили для тёмной темы, когда класс установлен */
+  .dark-theme body {
+    background: var(--bg);
+    color: var(--main-text);
   }
 
-  const diff = total - actual;
-  if(diff <= 0) return "";
+  .wrap{max-width:600px;margin:0 auto;padding:16px;}
+  h1{text-align:center;margin:0 0 16px;font-size:22px;font-weight:700;}
 
-  const greeting = getGreeting();
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom:16px;
+  }
 
-  return `${greeting}
-Прошу провести перерахунок вартості поїздки.
-Розрахункова сума становить ${total.toFixed(2)} грн.
-Деталі розрахунку:
-${lines.join("\n")}
-Фактична — ${actual.toFixed(2)} грн.
-Прошу донарахувати різницю у розмірі ${diff.toFixed(2)} грн.
-Щиро дякую!🤗`;
+  /* Для темной темы тени нужно сделать менее заметными */
+  .dark-theme .card {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  label{font-size:15px;color:var(--muted-text);margin-bottom:6px;display:block;}
+
+  input[type="number"]{
+    width:100%;
+    padding:14px 12px;
+    font-size:18px;
+    border-radius:12px;
+    border:1px solid var(--border-color);
+    margin-bottom:12px;
+    box-sizing:border-box;
+    background: var(--card);
+    color: var(--main-text);
+  }
+
+  input[type="number"]:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(0,102,255,0.2);
+  }
+
+  /* --- СТИЛИ ДЛЯ РЯДА КНОПОК --- */
+  .button-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    background:var(--accent);
+    border:0;
+    color:white;
+    font-size:18px;
+    font-weight:600;
+    flex-grow: 1; 
+  }
+  
+  .small-icon-btn {
+    padding: 14px;
+    border-radius: 12px;
+    border: 0;
+    color: white; 
+    cursor: pointer;
+    flex-shrink: 0; 
+  }
+  .small-icon-btn.red {
+    background: var(--bad); 
+  }
+  .small-icon-btn svg {
+    display: block;
+  }
+  /* --- КОНЕЦ СТИЛЕЙ ДЛЯ РЯДА КНОПОК --- */
+
+  .results{display:flex;flex-direction:column;gap:16px;}
+
+  .panel{
+    background:var(--card);
+    border-radius:16px;
+    padding:16px;
+    border:1px solid var(--panel-border);
+  }
+
+  .panel h3{margin:0 0 10px;font-size:18px;}
+
+  .line{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    font-size:16px;
+    border-top:1px solid var(--line-divider);
+  }
+  .line:first-of-type{border-top:0;padding-top:0;}
+
+  .val{font-weight:700;}
+
+  .diff{
+    padding:6px 12px;
+    border-radius:10px;
+    min-width:90px;
+    text-align:center;
+    display:inline-block;
+    font-weight:600;
+  }
+
+  .zero{
+    background:var(--zero-bg);
+    border:1px dashed var(--zero-border);
+    color:var(--zero-text);
+  }
+
+  textarea{
+    width: 100%;
+    margin: 10px 0;
+    height: 140px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    display: block;
+    background: var(--card);
+    color: var(--main-text);
+  }
+
+  .row{display:flex;gap:10px;}
+  .small-btn{
+    padding:8px 12px;
+    border-radius:8px;
+    border:0;
+    background:var(--small-btn-bg);
+    color: var(--main-text);
+    cursor:pointer;
+  }
+  
+  /* --- Стили для дополнительных параметров и переключателей --- */
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 6px;
+    font-size: 16px;
+  }
+
+  #extraFields {
+    overflow: hidden;
+    max-height: 0;
+    padding: 0;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+  }
+
+  #extraFields.open {
+    max-height: 300px;
+    padding: 10px 0;
+  }
+
+  #extraFields label {
+    display: block;
+    margin: 8px 0 4px;
+  }
+
+  #extraFields input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    font-size: 16px;
+    box-sizing: border-box;
+    background: var(--card);
+    color: var(--main-text);
+  }
+  
+  /* --- CSS ДЛЯ КАСТОМНОГО СЛАЙДЕРА (TOGGLE SWITCH) --- */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; 
+    height: 28px; 
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .4s;
+    border-radius: 28px;
+    background-color: var(--zero-bg); 
+    border: 1px solid var(--zero-border);
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white; 
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Активное состояние */
+  input:checked + .slider {
+    background-color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>Розрахунок опосередкованного споживання системи відкатних воріт</h1>
+
+  <div class="card">
+    <label class="toggle-row">
+      <span>Темна тема</span>
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+  </div>
+
+  <div class="card">
+    <label>Споживання пристрою в режимі очікування*, Вт</label>
+    <input id="potugnist_o4ikuvannya" type="number" inputmode="decimal" value="3">
+    <label>
+  *Характеристики нашого пристрою в режимі очикування не знайдено,
+  але є характеристики аналога по потужності 
+  <a href="https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/">
+    ROTEO RTO-500M https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/
+  </a>
+    </label>
+    <br>
+
+    <label>Потужність двигуна, Вт</label>
+    <input id="potugnist_dvyguna" type="number" inputmode="decimal" step="0.01" value="250">
+    <br>
+      
+    <label>Час відкриття воріт, секунд</label>
+    <input id="t_vidkryttya" type="number" inputmode="decimal" step="0.01" value="20">
+    <br>
+      
+    <label>Час закриття воріт, секунд</label>
+    <input id="t_zakryttya" type="number" inputmode="decimal" step="0.01" value="20">
+    <br>
+      
+    <label>Інтенсивність використання</label>
+    <label>Опосередкована кількість циклів (відкриття-закриття) на добу</label>
+    <input id="kvo_zykliv" type="number" inputmode="decimal" step="0.01" value="10">
+    <br>
+      
+    <label>Розрахунковий період</label>
+    <label>Кількість місяців</label>
+    <input id="period" type="number" inputmode="decimal" step="0.01" value="1">
+    <br>
+      
+    <label>Вартість електроенергії</label>
+    <label>Тариф вартості 1 кВт*год, грн**</label>
+    <input id="tarif" type="number" inputmode="decimal" step="0.01" value="4.32">
+    <label>**1 жовтня 2021 – 31 травня 2023; 1,44 грн/кВт·год (до 250 кВт·год/місяць) та 1,68 грн/кВт·год (більше 250 кВт·год) 
+    <br>
+      1 червня 2023 – 31 травня 2024; 2,64 грн/кВт·год (єдиний тариф)
+    <br>
+      1 червня 2024 – 31 жовтня 2025; 4,32 грн/кВт·год (єдиний тариф)
+    <br>
+      з 1 листопада 2025 ; 4,32 грн/кВт·год (денний тариф) та 2,16 грн/кВт·год (нічний тариф)</label>
+    <br>
+
+
+    <label class="toggle-row">
+      <span>Додаткові параметри</span>
+      <label class="switch">
+        <input type="checkbox" id="extraToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+
+    <div id="extraFields">
+      <label>Споживання лічильника, Вт</label>
+      <input id="potugnist_li4ilnyka" type="number" step="1" placeholder="необов’язково, до 1 Вт">
+    </div>
+
+    <div class="button-row">
+      <button class="small-icon-btn red" 
+        id="clearBtn" 
+        title="Очистити"
+        type="button" 
+        onclick="window.location.reload()">
+    
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path d="M16 9v10H8V9h8m-1.5-6h-5L9 4H7v2h10V4h-2l-1.5-3zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
+          </svg>
+      </button>
+
+      <button class="btn" id="calcBtn">Розрахувати</button>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="panel">
+      <h3>Розрахунок</h3>
+      <div class="line"><span>Розрахункова сума</span><span class="val" id="suma">—</span></div>
+      <div class="line"><span>Розрахункове споживання</span><span class="diff zero" id="spogyvannya">—</span></div>
+      <textarea id="stdMsg" placeholder="Повідомлення для оператора зʼявиться тут"></textarea>
+      <button class="small-btn" id="copyStd">Копіювати</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+document.getElementById('extraToggle').addEventListener('change', function () {
+  const extra = document.getElementById('extraFields');
+  const li4Input = document.getElementById('potugnist_li4ilnyka');
+
+  if (this.checked) {
+    extra.classList.add('open');
+  } else {
+    extra.classList.remove('open');
+    li4Input.value = '';
+  }
+});
+
+
+// --- ФУНКЦИОНАЛ ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ---
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const THEME_KEY = 'uklonTheme';
+
+// 1. Установка начальной темы при загрузке
+function setInitialTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-theme');
+    themeToggle.checked = true;
+  } 
 }
 
-function bindCopy(btnId, taId){
-  const btn = document.getElementById(btnId);
-  btn.onclick = function(){
-    const t = document.getElementById(taId);
-    if(!t.value){
-      alert('Немає повідомлення для копіювання');
-      return;
-    }
+// 2. Обработчик для переключателя
+themeToggle.addEventListener('change', function () {
+  if (this.checked) {
+    // Включаем тёмную тему
+    body.classList.add('dark-theme');
+    localStorage.setItem(THEME_KEY, 'dark');
+  } else {
+    // Включаем светлую тему
+    body.classList.remove('dark-theme');
+    localStorage.setItem(THEME_KEY, 'light');
+  }
+});
+
+// Вызываем функцию для установки темы после загрузки скрипта
+setInitialTheme();
+
+
+// PWA Service Worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker зареєстрований'))
+    .catch(err => console.log('Service Worker помилка:', err));
+}
+</script>
+</body>
+</html>
     t.select();
     t.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(t.value).then(
@@ -520,38 +946,14 @@ bindCopy('copyStd','stdMsg');
 bindCopy('copyCf','cfMsg');
 bindCopy('copyBiz','bizMsg');
 
-document.getElementById("calcBtn").onclick = function(){
-  const actual = parseFloat(document.getElementById("actual").value);
-  const km = parseFloat(document.getElementById("distance").value);
-  const coef = parseFloat(document.getElementById("coef").value);
-  const paidMinutes = parseInt(document.getElementById("paidMinutes").value) || 0;
-  const midPoints = parseInt(document.getElementById("midPoints").value) || 0;
 
-  if(isNaN(km) || isNaN(coef) || isNaN(actual)){
-    alert("Введіть коректні дані");
-    return;
-  }
+  
 
-  const totals = {
-    std: calcFare(km, STD) * coef + paidMinutes*STD.extraMinute + midPoints*STD.extraPoint,
-    cf: calcFare(km, CFM) * coef + paidMinutes*CFM.extraMinute + midPoints*CFM.extraPoint,
-    biz: calcFare(km, BIZ) * coef + paidMinutes*BIZ.extraMinute + midPoints*BIZ.extraPoint
-  };
+  
 
-  document.getElementById("stdCalc").textContent = fmt(totals.std);
-  document.getElementById("cfCalc").textContent = fmt(totals.cf);
-  document.getElementById("bizCalc").textContent = fmt(totals.biz);
-
-  // Для разницы используем фактическая - расчетная (Actual - Calculated)
-  colorize(document.getElementById("stdDiff"), actual - totals.std);
-  colorize(document.getElementById("cfDiff"), actual - totals.cf);
-  colorize(document.getElementById("bizDiff"), actual - totals.biz);
-
-  document.getElementById('stdMsg').value = genMsg(STD, km, coef, actual, paidMinutes, midPoints);
-  document.getElementById('cfMsg').value = genMsg(CFM, km, coef, actual, paidMinutes, midPoints);
-  document.getElementById('bizMsg').value = genMsg(BIZ, km, coef, actual, paidMinutes, midPoints);
-};
-
+  
+  
+  
 
 
 
