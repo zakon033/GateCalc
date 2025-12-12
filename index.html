@@ -556,33 +556,7 @@ document.getElementById("calcBtn").onclick = function(){
   document.getElementById('bizMsg').value = genMsg(BIZ, km, coef, actual, paidMinutes, midPoints);
 };
 
-document.getElementById("clearBtn").onclick = function(){
-  // Очистка полей ввода и результатов
-  document.getElementById("actual").value = '';
-  document.getElementById("distance").value = '';
-  document.getElementById("coef").value = '';
-  document.getElementById("paidMinutes").value = '';
-  document.getElementById("midPoints").value = '';
-  
-  document.getElementById("stdCalc").textContent = '—';
-  document.getElementById("cfCalc").textContent = '—';
-  document.getElementById("bizCalc").textContent = '—';
-  
-  colorize(document.getElementById("stdDiff"), NaN);
-  colorize(document.getElementById("cfDiff"), NaN);
-  colorize(document.getElementById("bizDiff"), NaN);
-  
-  document.getElementById('stdMsg').value = '';
-  document.getElementById('cfMsg').value = '';
-  document.getElementById('bizMsg').value = '';
-  
-  const extraToggle = document.getElementById('extraToggle');
-  const extraFields = document.getElementById('extraFields');
-  if (extraToggle.checked) {
-    extraToggle.checked = false;
-    extraFields.classList.remove('open');
-  }
-};
+
 
 
 document.getElementById('extraToggle').addEventListener('change', function () {
