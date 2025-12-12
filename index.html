@@ -15,306 +15,176 @@
 <link rel="manifest" href="manifest.json">
 
 <style>
-  /* --- ПЕРЕМЕННЫЕ ПО УМОЛЧАНИЮ (СВЕТЛАЯ ТЕМА) --- */
-  :root{
-    /* Основные цвета */
-    --bg:#f2f4f7;
-    --card:#ffffff;
-    --accent:#0066ff;
-    
-    /* Тексты */
-    --main-text:#000000;
-    --muted-text:#6b6b6b; 
-    
-    /* Границы и разделители */
-    --border-color:#d8dce3;
-    --panel-border:#e7e9ee;
-    --line-divider:#eee;
-    
-    /* Цвета состояний */
-    --green:#c8f5c2;
-    --red:#ffd4d4;
-    --good:#0c7a27;
-    --bad:#a80000;
-    
-    /* Элементы .zero */
-    --zero-bg:#f4f4f4;
-    --zero-border:#ccc;
-    --zero-text:#555;
-    --small-btn-bg:#eee;
-  }
+/* --- Светлая тема --- */
+:root{
+  --bg:#f2f4f7;
+  --card:#ffffff;
+  --accent:#0066ff;
 
-  /* --- ПЕРЕМЕННЫЕ ДЛЯ ТЕМНОЙ ТЕМЫ --- */
-  .dark-theme{
-    /* Основные цвета */
-    --bg:#121212;
-    --card:#1f1f1f;
-    --accent:#5599ff;
-    
-    /* Тексты */
-    --main-text:#f0f0f0;
-    --muted-text:#ffffff; 
-    
-    /* Границы и разделители */
-    --border-color:#333;
-    --panel-border:#2e2e2e;
-    --line-divider:#333;
-    
-    /* Цвета состояний */
-    --green:#1a3a1f; 
-    --red:#472c2c; 
-    --good:#5fb371; 
-    --bad:#ff7575; 
-    
-    /* Элементы .zero */
-    --zero-bg:#2d2d2d;
-    --zero-border:#444;
-    --zero-text:#a0a0a0;
-    --small-btn-bg:#333;
-  }
+  --text:#000000;
+  --text-muted:#6b6b6b;
+
+  --border:#d8dce3;
+  --panel-border:#e7e9ee;
+  --divider:#eee;
+
+  --good:#0c7a27;
+  --bad:#a80000;
+
+  --grey:#777;
   
-  /* --- БАЗОВЫЕ СТИЛИ (Одинаковые для обеих тем) --- */
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:var(--bg);
-    margin:0;
-    padding:0;
-    color: var(--main-text); 
-  }
-  
-  a {
-    /* 1. Цвет текста ссылки берётся из вашей переменной --accent */
-    color: var(--accent);
-    
-    /* 2. Задает подчёркивание */
-    text-decoration: underline; 
+  --zero-bg:#f4f4f4;
+  --zero-border:#ccc;
 }
 
-  
-  /* Применяем основные стили для тёмной темы, когда класс установлен */
-  .dark-theme body {
-    background: var(--bg);
-    color: var(--main-text);
-  }
+/* --- Тёмная тема --- */
+.dark-theme{
+  --bg:#121212;
+  --card:#1f1f1f;
+  --accent:#5599ff;
 
-  .wrap{max-width:600px;margin:0 auto;padding:16px;}
-  h1{text-align:center;margin:0 0 16px;font-size:22px;font-weight:700;}
+  --text:#f0f0f0;
+  --text-muted:#cccccc;
 
-  .card{
-    background:var(--card);
-    border-radius:16px;
-    padding:18px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    margin-bottom:16px;
-  }
+  --border:#333;
+  --panel-border:#2e2e2e;
+  --divider:#333;
 
-  /* Для темной темы тени нужно сделать менее заметными */
-  .dark-theme .card {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  }
+  --good:#5fb371;
+  --bad:#ff7575;
 
-  label{font-size:15px;color:var(--muted-text);margin-bottom:6px;display:block;}
+  --grey:#a0a0a0;
 
-  input[type="number"]{
-    width:100%;
-    padding:14px 12px;
-    font-size:18px;
-    border-radius:12px;
-    border:1px solid var(--border-color);
-    margin-bottom:12px;
-    box-sizing:border-box;
-    background: var(--card);
-    color: var(--main-text);
-  }
+  --zero-bg:#2d2d2d;
+  --zero-border:#444;
+}
 
-  input[type="number"]:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 2px rgba(0,102,255,0.2);
-  }
+/* --- Базовые стили --- */
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:var(--bg);
+  margin:0;
+  padding:0;
+  color:var(--text);
+}
 
-  /* --- СТИЛИ ДЛЯ РЯДА КНОПОК --- */
-  .button-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
+a{ color:var(--accent); text-decoration:underline; }
 
-  .btn{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    background:var(--accent);
-    border:0;
-    color:white;
-    font-size:18px;
-    font-weight:600;
-    flex-grow: 1; 
-  }
-  
-  .small-icon-btn {
-    padding: 14px;
-    border-radius: 12px;
-    border: 0;
-    color: white; 
-    cursor: pointer;
-    flex-shrink: 0; 
-  }
-  .small-icon-btn.red {
-    background: var(--bad); 
-  }
-  .small-icon-btn svg {
-    display: block;
-  }
-  /* --- КОНЕЦ СТИЛЕЙ ДЛЯ РЯДА КНОПОК --- */
+.wrap{max-width:600px;margin:0 auto;padding:16px;}
+h1{text-align:center;margin:0 0 16px;font-size:22px;font-weight:700;}
 
-  .results{display:flex;flex-direction:column;gap:16px;}
+.card{
+  background:var(--card);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  margin-bottom:16px;
+}
 
-  .panel{
-    background:var(--card);
-    border-radius:16px;
-    padding:16px;
-    border:1px solid var(--panel-border);
-  }
+.dark-theme .card{
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
 
-  .panel h3{margin:0 0 10px;font-size:18px;}
+label{font-size:15px;color:var(--text-muted);margin-bottom:6px;display:block;}
 
-  .line{
-    display:flex;
-    justify-content:space-between;
-    padding:8px 0;
-    font-size:16px;
-    border-top:1px solid var(--line-divider);
-  }
-  .line:first-of-type{border-top:0;padding-top:0;}
+input[type="number"]{
+  width:100%;padding:14px 12px;font-size:18px;
+  border-radius:12px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);
+  margin-bottom:12px;box-sizing:border-box;
+}
 
-  .val{font-weight:700;}
+input[type="number"]:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(0,102,255,0.2);
+}
 
-  .diff{
-    padding:6px 12px;
-    border-radius:10px;
-    min-width:90px;
-    text-align:center;
-    display:inline-block;
-    font-weight:600;
-  }
+.button-row{
+  display:flex;gap:10px;align-items:center;
+}
 
-  .zero{
-    background:var(--zero-bg);
-    border:1px dashed var(--zero-border);
-    color:var(--zero-text);
-  }
+.btn{
+  width:100%;padding:14px;border-radius:12px;
+  background:var(--accent);border:0;color:white;
+  font-size:18px;font-weight:600;flex-grow:1;
+}
 
-  textarea{
-    width: 100%;
-    margin: 10px 0;
-    height: 140px;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid var(--border-color);
-    box-sizing: border-box;
-    display: block;
-    background: var(--card);
-    color: var(--main-text);
-  }
+.small-icon-btn{
+  padding:14px;border-radius:12px;border:0;
+  color:white;cursor:pointer;flex-shrink:0;
+}
 
-  .row{display:flex;gap:10px;}
-  .small-btn{
-    padding:8px 12px;
-    border-radius:8px;
-    border:0;
-    background:var(--small-btn-bg);
-    color: var(--main-text);
-    cursor:pointer;
-  }
-  
-  /* --- Стили для дополнительных параметров и переключателей --- */
-  .toggle-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 12px 0 6px;
-    font-size: 16px;
-  }
+.small-icon-btn.red{background:var(--bad);}
 
-  #extraFields {
-    overflow: hidden;
-    max-height: 0;
-    padding: 0;
-    transition: max-height 0.35s ease, padding 0.25s ease;
-  }
+/* --- Результаты --- */
+/* По умолчанию — серый до расчёта */
+.val, .diff{
+  color:var(--grey);
+}
 
-  #extraFields.open {
-    max-height: 300px;
-    padding: 10px 0;
-  }
+.good-result{ color:var(--good) !important; }
+.bad-result{ color:var(--bad) !important; }
 
-  #extraFields label {
-    display: block;
-    margin: 8px 0 4px;
-  }
+.panel{
+  background:var(--card);
+  border-radius:16px;
+  padding:16px;
+  border:1px solid var(--panel-border);
+}
 
-  #extraFields input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    font-size: 16px;
-    box-sizing: border-box;
-    background: var(--card);
-    color: var(--main-text);
-  }
-  
-  /* --- CSS ДЛЯ КАСТОМНОГО СЛАЙДЕРА (TOGGLE SWITCH) --- */
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 50px; 
-    height: 28px; 
-  }
+.panel h3{margin:0 0 10px;font-size:18px;}
 
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+.line{
+  display:flex;justify-content:space-between;
+  padding:8px 0;font-size:16px;
+  border-top:1px solid var(--divider);
+}
 
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transition: .4s;
-    border-radius: 28px;
-    background-color: var(--zero-bg); 
-    border: 1px solid var(--zero-border);
-  }
+.line:first-of-type{
+  border-top:0;padding-top:0;
+}
 
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white; 
-    transition: .4s;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
+textarea{
+  width:100%;margin:10px 0;height:140px;
+  border-radius:10px;padding:10px;
+  font-size:14px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);
+  box-sizing:border-box;
+}
 
-  /* Активное состояние */
-  input:checked + .slider {
-    background-color: var(--accent);
-    border-color: var(--accent);
-  }
+.small-btn{
+  padding:8px 12px;border-radius:8px;border:0;
+  background:var(--zero-bg);color:var(--text);cursor:pointer;
+}
 
-  input:checked + .slider:before {
-    transform: translateX(20px);
-  }
+/* --- Toggle --- */
+.switch{
+  position:relative;display:inline-block;width:50px;height:28px;
+}
+.switch input{opacity:0;width:0;height:0;}
+
+.slider{
+  position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
+  transition:.4s;border-radius:28px;
+  background-color:var(--zero-bg);border:1px solid var(--zero-border);
+}
+
+.slider:before{
+  content:"";position:absolute;height:20px;width:20px;left:4px;bottom:3px;
+  background:white;border-radius:50%;
+  transition:.4s;box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider{
+  background-color:var(--accent);border-color:var(--accent);
+}
+input:checked + .slider:before{transform:translateX(20px);}
+
+#extraFields{
+  overflow:hidden;max-height:0;padding:0;
+  transition:max-height .35s ease,padding .25s ease;
+}
+#extraFields.open{max-height:300px;padding:10px 0;}
 </style>
 </head>
 
@@ -323,9 +193,9 @@
   <h1>Розрахунок опосередкованного споживання системи відкатних воріт</h1>
 
   <div class="card">
-    <label class="toggle-row">
+    <label class="toggle-row" style="display:flex;justify-content:space-between;align-items:center;">
       <span>Темна тема</span>
-      <label class="switch">
+      <label class="switch" style="margin:0">
         <input type="checkbox" id="themeToggle">
         <span class="slider"></span>
       </label>
@@ -339,7 +209,7 @@
   *Характеристики нашого пристрою в режимі очикування не знайдено,
   але є характеристики аналога по потужності 
   <a href="https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/">
-    ROTEO RTO-500M https://alutech.ua/avtomatika/dlya-otkatnyh-vorot/privod-dlya-otkatnykh-vorot-roteo-rto-500m/
+    ROTEO RTO-500M
   </a>
     </label>
     <br>
@@ -378,10 +248,9 @@
       з 1 листопада 2025 ; 4,32 грн/кВт·год (денний тариф) та 2,16 грн/кВт·год (нічний тариф)</label>
     <br>
 
-
-    <label class="toggle-row">
+    <label class="toggle-row" style="display:flex;justify-content:space-between;align-items:center;">
       <span>Додаткові параметри</span>
-      <label class="switch">
+      <label class="switch" style="margin:0">
         <input type="checkbox" id="extraToggle">
         <span class="slider"></span>
       </label>
@@ -408,20 +277,16 @@
     </div>
   </div>
 
-  <div class="results">
-    <div class="panel">
-      <h3>Розрахунок</h3>
-      <div class="line"><span>Розрахункова сума</span><span class="val" id="suma">—</span></div>
-      <div class="line"><span>Розрахункове споживання</span><span class="diff zero" id="spogyvannya">—</span></div>
-      <textarea id="stdMsg" placeholder="Деталізація розрахунків зʼявиться тут"></textarea>
-      <button class="small-btn" id="copyStd">Копіювати</button>
-    </div>
-
+  <div class="panel">
+    <h3>Розрахунок</h3>
+    <div class="line"><span>Розрахункова сума</span><span class="val" id="suma">—</span></div>
+    <div class="line"><span>Розрахункове споживання</span><span class="diff" id="spogyvannya">—</span></div>
+    <textarea id="stdMsg" placeholder="Деталізація розрахунків зʼявиться тут"></textarea>
+    <button class="small-btn" id="copyStd">Копіювати</button>
   </div>
 </div>
 
 <script>
-
 document.getElementById("calcBtn").onclick = function(){
   const potugnist_o4ikuvannya = parseFloat(document.getElementById("potugnist_o4ikuvannya").value) || 0;
   const potugnist_dvyguna = parseFloat(document.getElementById("potugnist_dvyguna").value) || 0;
@@ -432,45 +297,29 @@ document.getElementById("calcBtn").onclick = function(){
   const tarif = parseFloat(document.getElementById("tarif").value) || 0;
   const potugnist_li4ilnyka = parseFloat(document.getElementById("potugnist_li4ilnyka").value) || 0;
   
+  // Валидация: проверяем основные поля
   if(isNaN(tarif) || isNaN(potugnist_o4ikuvannya) || isNaN(potugnist_dvyguna) || isNaN(t_vidkryttya) || isNaN(t_zakryttya) || isNaN(kvo_zykliv) || isNaN(period)){
     alert("Пожалуйста, введите корректные числовые данные во все основные поля для расчета.");
     return;
   }
   
   const spogyvannya_o4ikuvannya = (potugnist_o4ikuvannya / 1000) * (period * 30 * 24); 
-
   const spogyvannya_dvyguna = (potugnist_dvyguna / 1000) * (((t_vidkryttya + t_zakryttya) * kvo_zykliv * 30 * period) / 3600); 
-
   const spogyvannya_li4ilnyka = (potugnist_li4ilnyka / 1000) * (period * 30 * 24);
 
   const spogyvannya = spogyvannya_o4ikuvannya + spogyvannya_dvyguna + spogyvannya_li4ilnyka;
-
   const suma = spogyvannya * tarif;
 
-  // --- ИЗМЕНЕННЫЙ БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (С УСЛОВНЫМ СТИЛИЗОВАНИЕМ) ---
-  
+  // Обновляем DOM: сохраняем исходные классы, но применяем нужные цвета
   const sumaEl = document.getElementById("suma");
   sumaEl.textContent = suma.toFixed(2) + " ₴";
-  
-  // УСЛОВИЕ ДЛЯ СУММЫ (ЗЕЛЕНЫЙ, если > 0)
-  if (suma > 0) {
-      sumaEl.className = "val good-result"; // val для жирного текста + good-result для цвета
-  } else {
-      sumaEl.className = "val"; // Стандартный стиль, если сумма 0
-  }
-  
+  sumaEl.className = "val good-result";
+
   const spogyvannyaEl = document.getElementById("spogyvannya");
   spogyvannyaEl.textContent = spogyvannya.toFixed(3) + " кВт⋅год";
-  
-  // УСЛОВИЕ ДЛЯ ПОТРЕБЛЕНИЯ (КРАСНЫЙ, если > 0)
-  if (spogyvannya > 0) {
-      spogyvannyaEl.className = "diff bad-result"; // diff для отступа + bad-result для цвета
-  } else {
-      spogyvannyaEl.className = "diff zero"; // Стандартный стиль (серый), если потребление 0
-  }
-  
-  // ------------------------------------------------------------------------
+  spogyvannyaEl.className = "diff bad-result";
 
+  // Детализация расчёта
   const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
   
 1. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
@@ -499,8 +348,7 @@ ${potugnist_li4ilnyka > 0 ? `3. Споживання лічильника (${pot
   document.getElementById('stdMsg').value = resultMessage;
 };
 
-
-
+// Показ/скрытие доп. полей
 document.getElementById('extraToggle').addEventListener('change', function () {
   const extra = document.getElementById('extraFields');
   const li4Input = document.getElementById('potugnist_li4ilnyka');
@@ -513,40 +361,31 @@ document.getElementById('extraToggle').addEventListener('change', function () {
   }
 });
 
-
-// --- ФУНКЦИОНАЛ ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ---
+// Тема — исправленный селектор (класс висит на body)
 const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
 const THEME_KEY = 'uklonTheme';
 
-// 1. Установка начальной темы при загрузке
+// Установка начальной темы
 function setInitialTheme() {
   const savedTheme = localStorage.getItem(THEME_KEY);
-  
   if (savedTheme === 'dark') {
     body.classList.add('dark-theme');
     themeToggle.checked = true;
-  } 
+  }
 }
-
-// 2. Обработчик для переключателя
 themeToggle.addEventListener('change', function () {
   if (this.checked) {
-    // Включаем тёмную тему
     body.classList.add('dark-theme');
     localStorage.setItem(THEME_KEY, 'dark');
   } else {
-    // Включаем светлую тему
     body.classList.remove('dark-theme');
     localStorage.setItem(THEME_KEY, 'light');
   }
 });
-
-// Вызываем функцию для установки темы после загрузки скрипта
 setInitialTheme();
 
-
-// PWA Service Worker registration
+// Регистрация service worker (PWA)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log('Service Worker зареєстрований'))
