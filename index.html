@@ -82,6 +82,15 @@
     color: var(--main-text); 
   }
   
+  a {
+    /* 1. Цвет текста ссылки берётся из вашей переменной --accent */
+    color: var(--accent);
+    
+    /* 2. Задает подчёркивание */
+    text-decoration: underline; 
+}
+
+  
   /* Применяем основные стили для тёмной темы, когда класс установлен */
   .dark-theme body {
     background: var(--bg);
