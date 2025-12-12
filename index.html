@@ -422,6 +422,25 @@
 
 <script>
 
+document.getElementById("calcBtn").onclick = function(){
+  const potugnist_o4ikuvannya = parseFloat(document.getElementById("potugnist_o4ikuvannya").value) || 0;
+  const potugnist_dvyguna = parseFloat(document.getElementById("potugnist_dvyguna").value) || 0;
+  const t_vidkryttya = parseFloat(document.getElementById("t_vidkryttya").value) || 0;
+  const t_zakryttya = parseFloat(document.getElementById("t_zakryttya").value) || 0;
+  const kvo_zykliv = parseFloat(document.getElementById("kvo_zykliv").value) || 0;
+  
+  const period = parseFloat(document.getElementById("period").value) || 0;
+  const tarif = parseFloat(document.getElementById("tarif").value) || 0;
+  
+  const potugnist_li4ilnyka = parseFloat(document.getElementById("potugnist_li4ilnyka").value) || 0;
+  
+  if(isNaN(tarif) || isNaN(potugnist_o4ikuvannya) || isNaN(potugnist_dvyguna) || isNaN(t_vidkryttya) || isNaN(t_zakryttya) || isNaN(kvo_zykliv) || isNaN(period)){
+    alert("Пожалуйста, введите корректные числовые данные во все основные поля для расчета.");
+    return;
+  }
+};
+
+
 document.getElementById('extraToggle').addEventListener('change', function () {
   const extra = document.getElementById('extraFields');
   const li4Input = document.getElementById('potugnist_li4ilnyka');
