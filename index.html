@@ -476,16 +476,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-    t.select();
-    t.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(t.value).then(
-      () => alert('Скопійовано'),
-      () => { document.execCommand('copy'); alert('Скопійовано'); }
-    );
-  };
-}
-
-
-</script>
-</body>
-</html>
