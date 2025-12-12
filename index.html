@@ -205,6 +205,21 @@
     color:var(--zero-text);
   }
 
+  /* --- СТИЛИ ДЛЯ ЦВЕТНОГО ФОНА РЕЗУЛЬТАТОВ (Для чистоты кода) --- */
+  /* Хотя стилизация будет выполнена в JS, эти классы могут служить запасным вариантом */
+  .good {
+    background: var(--green);
+    color: var(--good);
+    border: 1px solid var(--good);
+  }
+
+  .bad {
+    background: var(--red);
+    color: var(--bad);
+    border: 1px solid var(--bad);
+  }
+  /* --------------------------------------------------------------------- */
+
   textarea{
     width: 100%;
     margin: 10px 0;
@@ -396,8 +411,7 @@
       <button class="small-icon-btn red" 
         id="clearBtn" 
         title="Очистити"
-        type="button" 
-        onclick="window.location.reload()">
+        type="button">
     
           <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <path d="M16 9v10H8V9h8m-1.5-6h-5L9 4H7v2h10V4h-2l-1.5-3zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
@@ -421,6 +435,49 @@
 </div>
 
 <script>
+
+// --- ФУНКЦИЯ ЦВЕТОВОЙ ИНДИКАЦИИ ИЗ ВАШЕГО РАБОЧЕГО КОДА ---
+function colorize(el, v){
+  // v - это значение, которое нужно отобразить (наша сумма или потребление)
+  
+  // 1. Сбрасываем все стили и классы, оставляя только "diff"
+  el.className = "diff";
+  el.style.background = ""; 
+  el.style.color = ""; 
+  el.style.border = ""; // Очищаем границу
+
+  // 2. Если значение не число или равно 0, устанавливаем серый (zero) вид
+  if(isNaN(v) || v === 0){
+    el.classList.add("zero");
+    el.textContent = "—";
+    return;
+  }
+
+  // 3. Вывод значения с правильной единицей измерения
+  if (el.id === 'suma') {
+      el.textContent = v.toFixed(2) + " ₴";
+  } else if (el.id === 'spogyvannya') {
+      el.textContent = v.toFixed(3) + " кВт⋅год";
+  } else {
+      el.textContent = v.toFixed(2); // Запасной вариант
+  }
+
+  // 4. Логика цвета (прямая стилизация)
+  if(el.id === 'suma'){
+      // СУММА: Считаем сумму "ХОРОШИМ" результатом (зеленый фон)
+      el.style.background = "var(--green)";
+      el.style.color = "var(--good)";
+      el.style.border = "1px solid var(--good)";
+  }
+  else if(el.id === 'spogyvannya'){
+      // ПОТРЕБЛЕНИЕ: Считаем потребление "ПЛОХИМ" результатом (красный фон)
+      el.style.background = "var(--red)";
+      el.style.color = "var(--bad)";
+      el.style.border = "1px solid var(--bad)";
+  }
+}
+// -----------------------------------------------------------------
+
 
 document.getElementById("calcBtn").onclick = function(){
   const potugnist_o4ikuvannya = parseFloat(document.getElementById("potugnist_o4ikuvannya").value) || 0;
@@ -447,27 +504,14 @@ document.getElementById("calcBtn").onclick = function(){
 
   const suma = spogyvannya * tarif;
 
-  // --- ИЗМЕНЕННЫЙ БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (С УСЛОВНЫМ СТИЛИЗОВАНИЕМ) ---
+  // --- БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (Используем colorize) ---
   
   const sumaEl = document.getElementById("suma");
-  sumaEl.textContent = suma.toFixed(2) + " ₴";
-  
-  // УСЛОВИЕ ДЛЯ СУММЫ (ЗЕЛЕНЫЙ, если > 0)
-  if (suma > 0) {
-      sumaEl.className = "val good-result"; // val для жирного текста + good-result для цвета
-  } else {
-      sumaEl.className = "val"; // Стандартный стиль, если сумма 0
-  }
-  
   const spogyvannyaEl = document.getElementById("spogyvannya");
-  spogyvannyaEl.textContent = spogyvannya.toFixed(3) + " кВт⋅год";
   
-  // УСЛОВИЕ ДЛЯ ПОТРЕБЛЕНИЯ (КРАСНЫЙ, если > 0)
-  if (spogyvannya > 0) {
-      spogyvannyaEl.className = "diff bad-result"; // diff для отступа + bad-result для цвета
-  } else {
-      spogyvannyaEl.className = "diff zero"; // Стандартный стиль (серый), если потребление 0
-  }
+  // Вызываем colorize для суммы (зеленый) и потребления (красный)
+  colorize(sumaEl, suma); 
+  colorize(spogyvannyaEl, spogyvannya); 
   
   // ------------------------------------------------------------------------
 
@@ -499,6 +543,32 @@ ${potugnist_li4ilnyka > 0 ? `3. Споживання лічильника (${pot
   document.getElementById('stdMsg').value = resultMessage;
 };
 
+// --- ФУНКЦИОНАЛ КНОПКИ "ОЧИСТИТЬ" (Сброс стилей) ---
+document.getElementById("clearBtn").onclick = function(){
+  // Очистка полей ввода
+  document.getElementById("potugnist_o4ikuvannya").value = '3'; // Сброс до значений по умолчанию
+  document.getElementById("potugnist_dvyguna").value = '250';
+  document.getElementById("t_vidkryttya").value = '20';
+  document.getElementById("t_zakryttya").value = '20';
+  document.getElementById("kvo_zykliv").value = '10';
+  document.getElementById("period").value = '1';
+  document.getElementById("tarif").value = '4.32';
+  document.getElementById("potugnist_li4ilnyka").value = '';
+  
+  // Сброс результатов и стилей с помощью colorize(el, 0)
+  colorize(document.getElementById("suma"), 0); 
+  colorize(document.getElementById("spogyvannya"), 0); 
+  
+  document.getElementById('stdMsg').value = '';
+  
+  // Сброс дополнительных полей
+  const extraToggle = document.getElementById('extraToggle');
+  const extraFields = document.getElementById('extraFields');
+  if (extraToggle.checked) {
+    extraToggle.checked = false;
+    extraFields.classList.remove('open');
+  }
+};
 
 
 document.getElementById('extraToggle').addEventListener('change', function () {
@@ -512,6 +582,22 @@ document.getElementById('extraToggle').addEventListener('change', function () {
     li4Input.value = '';
   }
 });
+
+
+// --- ФУНКЦИОНАЛ КНОПКИ "КОПИРОВАТЬ" ---
+document.getElementById("copyStd").onclick = function(){
+    const t = document.getElementById('stdMsg');
+    if(!t.value){
+      alert('Немає повідомлення для копіювання');
+      return;
+    }
+    t.select();
+    t.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(t.value).then(
+      () => alert('Скопійовано'),
+      () => { document.execCommand('copy'); alert('Скопійовано'); }
+    );
+};
 
 
 // --- ФУНКЦИОНАЛ ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ---
