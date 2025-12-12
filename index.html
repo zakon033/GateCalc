@@ -447,13 +447,30 @@ document.getElementById("calcBtn").onclick = function(){
 
   const suma = spogyvannya * tarif;
 
-  document.getElementById("suma").textContent = suma.toFixed(2) + " грн";
+  // --- ИЗМЕНЕННЫЙ БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (С УСЛОВНЫМ СТИЛИЗОВАНИЕМ) ---
+  
+  const sumaEl = document.getElementById("suma");
+  sumaEl.textContent = suma.toFixed(2) + " ₴";
+  
+  // УСЛОВИЕ ДЛЯ СУММЫ (ЗЕЛЕНЫЙ, если > 0)
+  if (suma > 0) {
+      sumaEl.className = "val good-result"; // val для жирного текста + good-result для цвета
+  } else {
+      sumaEl.className = "val"; // Стандартный стиль, если сумма 0
+  }
   
   const spogyvannyaEl = document.getElementById("spogyvannya");
   spogyvannyaEl.textContent = spogyvannya.toFixed(3) + " кВт⋅год";
-  spogyvannyaEl.className = "val"; 
   
-  // --- ИЗМЕНЕННЫЙ БЛОК СООБЩЕНИЯ С ФОРМУЛАМИ ---
+  // УСЛОВИЕ ДЛЯ ПОТРЕБЛЕНИЯ (КРАСНЫЙ, если > 0)
+  if (spogyvannya > 0) {
+      spogyvannyaEl.className = "diff bad-result"; // diff для отступа + bad-result для цвета
+  } else {
+      spogyvannyaEl.className = "diff zero"; // Стандартный стиль (серый), если потребление 0
+  }
+  
+  // ------------------------------------------------------------------------
+
   const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
   
 1. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
@@ -481,7 +498,6 @@ ${potugnist_li4ilnyka > 0 ? `3. Споживання лічильника (${pot
   
   document.getElementById('stdMsg').value = resultMessage;
 };
-
 
 
 
