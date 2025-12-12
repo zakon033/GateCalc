@@ -83,12 +83,9 @@
   }
   
   a {
-    /* 1. Цвет текста ссылки берётся из вашей переменной --accent */
     color: var(--accent);
-    
-    /* 2. Задает подчёркивание */
     text-decoration: underline; 
-}
+  }
 
   
   /* Применяем основные стили для тёмной темы, когда класс установлен */
@@ -205,8 +202,7 @@
     color:var(--zero-text);
   }
 
-  /* --- СТИЛИ ДЛЯ ЦВЕТНОГО ФОНА РЕЗУЛЬТАТОВ (Для чистоты кода) --- */
-  /* Хотя стилизация будет выполнена в JS, эти классы могут служить запасным вариантом */
+  /* --- СТИЛИ ДЛЯ ЦВЕТНОГО ФОНА РЕЗУЛЬТАТОВ --- */
   .good {
     background: var(--green);
     color: var(--good);
@@ -218,7 +214,7 @@
     color: var(--bad);
     border: 1px solid var(--bad);
   }
-  /* --------------------------------------------------------------------- */
+  /* ------------------------------------------- */
 
   textarea{
     width: 100%;
@@ -436,15 +432,13 @@
 
 <script>
 
-// --- ФУНКЦИЯ ЦВЕТОВОЙ ИНДИКАЦИИ ИЗ ВАШЕГО РАБОЧЕГО КОДА ---
+// --- ФУНКЦИЯ ЦВЕТОВОЙ ИНДИКАЦИИ (РАБОЧИЙ МЕТОД) ---
 function colorize(el, v){
-  // v - это значение, которое нужно отобразить (наша сумма или потребление)
-  
   // 1. Сбрасываем все стили и классы, оставляя только "diff"
   el.className = "diff";
   el.style.background = ""; 
   el.style.color = ""; 
-  el.style.border = ""; // Очищаем границу
+  el.style.border = ""; 
 
   // 2. Если значение не число или равно 0, устанавливаем серый (zero) вид
   if(isNaN(v) || v === 0){
@@ -459,7 +453,7 @@ function colorize(el, v){
   } else if (el.id === 'spogyvannya') {
       el.textContent = v.toFixed(3) + " кВт⋅год";
   } else {
-      el.textContent = v.toFixed(2); // Запасной вариант
+      el.textContent = v.toFixed(2); 
   }
 
   // 4. Логика цвета (прямая стилизация)
@@ -480,6 +474,7 @@ function colorize(el, v){
 
 
 document.getElementById("calcBtn").onclick = function(){
+  // --- 1. СБОР ВВОДНЫХ ДАННЫХ ---
   const potugnist_o4ikuvannya = parseFloat(document.getElementById("potugnist_o4ikuvannya").value) || 0;
   const potugnist_dvyguna = parseFloat(document.getElementById("potugnist_dvyguna").value) || 0;
   const t_vidkryttya = parseFloat(document.getElementById("t_vidkryttya").value) || 0;
@@ -494,6 +489,7 @@ document.getElementById("calcBtn").onclick = function(){
     return;
   }
   
+  // --- 2. РАСЧЕТЫ ---
   const spogyvannya_o4ikuvannya = (potugnist_o4ikuvannya / 1000) * (period * 30 * 24); 
 
   const spogyvannya_dvyguna = (potugnist_dvyguna / 1000) * (((t_vidkryttya + t_zakryttya) * kvo_zykliv * 30 * period) / 3600); 
@@ -504,34 +500,17 @@ document.getElementById("calcBtn").onclick = function(){
 
   const suma = spogyvannya * tarif;
 
-  // --- БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (Используем colorize) ---
+  // --- 3. БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (Стилизация) ---
   
   const sumaEl = document.getElementById("suma");
   const spogyvannyaEl = document.getElementById("spogyvannya");
   
-  // Вызываем colorize для суммы (зеленый) и потребления (красный)
   colorize(sumaEl, suma); 
   colorize(spogyvannyaEl, spogyvannya); 
   
   // ------------------------------------------------------------------------
 
-  // ... (расчеты суммы)
-
-  const suma = spogyvannya * tarif;
-
-  // --- БЛОК ВЫВОДА РЕЗУЛЬТАТОВ (Используем colorize) ---
-  // ... (colorize вызовы) ...
-  
-  const sumaEl = document.getElementById("suma");
-  const spogyvannyaEl = document.getElementById("spogyvannya");
-  
-  // Вызываем colorize для суммы (зеленый) и потребления (красный)
-  colorize(sumaEl, suma); 
-  colorize(spogyvannyaEl, spogyvannya); 
-  
-  // ------------------------------------------------------------------------
-
-  // --- НОВАЯ ЛОГИКА ФОРМИРОВАНИЯ СООБЩЕНИЯ С ПРАВИЛЬНОЙ НУМЕРАЦИЕЙ ---
+  // --- 4. НОВАЯ ЛОГИКА ФОРМИРОВАНИЯ СООБЩЕНИЯ С ПРАВИЛЬНОЙ НУМЕРАЦИЕЙ ---
   
   let currentStep = 1;
   const details = [];
@@ -559,11 +538,8 @@ document.getElementById("calcBtn").onclick = function(){
     );
   }
 
-  // Последний элемент, добавленный в details, будет текущим текущим шагом.
-  const stepTotal = currentStep++;
-  const stepCost = currentStep++;
-
   // 4/5. Загальне споживання
+  const stepTotal = currentStep++;
   details.push(
     `${stepTotal}. Загальне споживання:
    Формула: ${potugnist_li4ilnyka > 0 ? 'Очікування + Двигун + Лічильник' : 'Очікування + Двигун'}
@@ -572,7 +548,7 @@ document.getElementById("calcBtn").onclick = function(){
 
   // 5/6. Орієнтовна вартість
   details.push(
-    `${stepCost}. Орієнтовна вартість:
+    `${currentStep}. Орієнтовна вартість:
    Формула: Загальне споживання * Тариф
    Розрахунок: ${spogyvannya.toFixed(3)} * ${tarif.toFixed(2)} = ${suma.toFixed(2)} грн`
   );
@@ -584,10 +560,6 @@ ${details.join("\n\n")}
    
 Загальна сума: ${suma.toFixed(2)} ₴
   `;
-  
-  document.getElementById('stdMsg').value = resultMessage;
-};
-
   
   document.getElementById('stdMsg').value = resultMessage;
 };
