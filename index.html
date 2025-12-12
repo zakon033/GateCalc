@@ -453,17 +453,35 @@ document.getElementById("calcBtn").onclick = function(){
   spogyvannyaEl.textContent = spogyvannya.toFixed(3) + " кВт⋅год";
   spogyvannyaEl.className = "val"; 
   
+  // --- ИЗМЕНЕННЫЙ БЛОК СООБЩЕНИЯ С ФОРМУЛАМИ ---
   const resultMessage = `Розрахункове споживання за ${period} місяць(ів):
   
-• Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
-• Споживання двигуна (${potugnist_dvyguna} Вт, під час руху): ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год
-${potugnist_li4ilnyka > 0 ? `• Споживання лічильника (${potugnist_li4ilnyka} Вт): ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год` : ''}
-  
-Загальне споживання: ${spogyvannya.toFixed(3)} кВт⋅год
-Орієнтовна вартість (за тарифом ${tarif.toFixed(2)} грн/кВт⋅год): ${suma.toFixed(2)} грн`;
+1. Споживання пристрою в режимі очікування (Плата ${potugnist_o4ikuvannya} Вт, 24/7): 
+   Формула: (Потужність / 1000) * (Період * 30 * 24)
+   Розрахунок: (${potugnist_o4ikuvannya} / 1000) * (${period} * 30 * 24) = ${spogyvannya_o4ikuvannya.toFixed(3)} кВт⋅год
+
+2. Споживання двигуна (${potugnist_dvyguna} Вт, під час руху):
+   Формула: (Потужність / 1000) * ((Т_откр + Т_закр) * Цикли * 30 * Період / 3600)
+   Розрахунок: (${potugnist_dvyguna} / 1000) * ((${t_vidkryttya} + ${t_zakryttya}) * ${kvo_zykliv} * 30 * ${period} / 3600) = ${spogyvannya_dvyguna.toFixed(3)} кВт⋅год
+   
+${potugnist_li4ilnyka > 0 ? `3. Споживання лічильника (${potugnist_li4ilnyka} Вт):
+   Формула: (Потужність / 1000) * (Період * 30 * 24)
+   Розрахунок: (${potugnist_li4ilnyka} / 1000) * (${period} * 30 * 24) = ${spogyvannya_li4ilnyka.toFixed(3)} кВт⋅год` : ''}
+   
+4. Загальне споживання:
+   Формула: Очікування + Двигун + Лічильник
+   Розрахунок: ${spogyvannya_o4ikuvannya.toFixed(3)} + ${spogyvannya_dvyguna.toFixed(3)} + ${potugnist_li4ilnyka > 0 ? spogyvannya_li4ilnyka.toFixed(3) : 0} = ${spogyvannya.toFixed(3)} кВт⋅год
+
+5. Орієнтовна вартість:
+   Формула: Загальне споживання * Тариф
+   Розрахунок: ${spogyvannya.toFixed(3)} * ${tarif.toFixed(2)} = ${suma.toFixed(2)} грн
+   
+Загальна сума: ${suma.toFixed(2)} ₴
+  `;
   
   document.getElementById('stdMsg').value = resultMessage;
 };
+
 
 
 
